@@ -1,0 +1,8 @@
+// Fonts (ini tetap pakai @import URL karena CSS import biasa, bukan Sass import)
+// @import url("https://fonts.bunny.net/css?family=Nunito");
+
+// Variables (harus diubah jadi @use juga)
+@use "variables" as *;
+
+// Bootstrap (pakai @use, sudah benar)
+@use "bootstrap/scss/bootstrap" as *;
