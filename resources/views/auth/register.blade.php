@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex align-items-center justify-content-center">
+<div id="landing-page" class="d-flex align-items-center justify-content-center">
     <div class="card shadow-lg border-0 p-4" style="max-width: 500px; width: 100%;">
         <div class="text-center mb-4">
-            <img src="{{ asset('assets/logo/patterns.svg') }}" alt="Aset Kartu" class="img-fluid" width="100">
+            <img src="{{ asset('assets/logo/Logo_Telkom_Indonesia_2013.png') }}" alt="Aset Kartu" class="img-fluid" width="100">
             <h4 class="mt-3 fw-bold">Buat Akun Baru</h4>
             <small class="text-muted">Manajemen Aset Kartu Perusahaan</small>
         </div>

@@ -11,12 +11,31 @@ use Illuminate\Support\Facades\Auth;
 
 class PeminjamanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        
-        $peminjaman = Peminjaman::orderBy('created_at', 'desc')->paginate(10);
-        return view('sekretaris.peminjaman', ['peminjaman' => $peminjaman]); // Return the view with peminjaman data
+        $query = Peminjaman::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_peminjam', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('unit')) {
+            $query->where('unit', $request->unit);
+        }
+
+        if ($request->filled('mitra')) {
+            $query->where('mitra', $request->mitra);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $peminjaman = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('sekretaris.peminjaman', compact('peminjaman'));
     }
+
 
     public function show($id)
     {
@@ -26,15 +45,35 @@ class PeminjamanController extends Controller
         return view('sekretaris.peminjaman-show', compact('peminjaman', 'accessCards', 'users'));
     }
 
-    public function ShowPengembalianHilang($id)
+    public function ShowHilang($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
         $accessCards = AccessCard::findOrFail($peminjaman->access_card_id);
         $users = User::findOrFail($peminjaman->requested_by_id); // ambil user HC (misal ada role)
-        return view('sekretaris.peminjaman-pengembalian-hilang', compact('peminjaman', 'accessCards', 'users'));
+        return view('sekretaris.peminjaman-hilang', compact('peminjaman', 'accessCards', 'users'));
     }
+
+    public function setujuiPengembalian($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        if ($peminjaman->status !== 'returned') {
+            return redirect()->back()->with('error', 'Status peminjaman tidak valid untuk disetujui.');
+        }
+        AccessCard::where('id', $peminjaman->access_card_id)->update(['status' => 'tersedia']);
+        $peminjaman->access_card_id = null;
+
+        $peminjaman->update([
+            'status' => 'completed',
+            'tanggal_pengembalian' => now(), // jika ada kolom ini
+            'access_card_id' => null,
+        ]);
+
+        return redirect()->route('sekre.peminjaman')->with('success', 'Pengembalian disetujui.');
+    }
+
     
-    public function updateStatusPengembalianHilang(Request $request, $id)
+    public function updateStatusHilang(Request $request, $id)
 {
     $request->validate([
         'access_card_id' => 'required|exists:access_cards,id',
@@ -105,22 +144,20 @@ class PeminjamanController extends Controller
 
         // Create Peminjaman Record
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->update($data);
         if ($data['status'] === 'approved') {
             // If the status is approved, update the access card status
             AccessCard::where('id', $data['access_card_id'])->update(['status' => 'dipinjam']);
-        } elseif ($data['status'] === 'completed') {
-            // If the status is completed, update the access card status to available
-            AccessCard::where('id', $data['access_card_id'])->update(['status' => 'tersedia']);
         } elseif ($data['status'] === 'rejected') {
             // If the status is rejected, set the access card status to available
             AccessCard::where('id', $data['access_card_id'])->update(['status' => 'tersedia']);
+            $data['access_card_id'] = null; // Clear access card if rejected
         }
         else {
             // If not approved, set the access card status to available
             AccessCard::where('id', $data['access_card_id'])->update(['status' => 'tersedia']);
         }
         // Redirect back to the index with a success message
+        $peminjaman->update($data);
         return redirect()->route('sekre.peminjaman')->with('success', 'Peminjaman berhasil dibuat.');
     }
 

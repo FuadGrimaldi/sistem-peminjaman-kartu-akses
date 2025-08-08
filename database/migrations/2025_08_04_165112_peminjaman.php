@@ -39,7 +39,7 @@ return new class extends Migration
             // Assuming 'lampiran' is a string, adjust as necessary for your use case
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_pengembalian')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected', 'completed']);
+            $table->enum('status', ['pending', 'approved', 'rejected', 'completed', 'returned']);
             $table->unsignedBigInteger('requested_by_id');
             $table->unsignedBigInteger('approved_by_id')->nullable();
             $table->unsignedBigInteger('access_card_id')->nullable();

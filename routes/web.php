@@ -55,6 +55,8 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('/admin/peminjaman/update/{id}', [PeminjamanController::class, 'update'])->name('admin.peminjaman.update');
     Route::delete('/admin/peminjaman/delete/{id}', [PeminjamanController::class, 'destroy'])->name('admin.peminjaman.delete');
     Route::get('/admin/peminjaman/show/{id}', [PeminjamanController::class, 'show'])->name('admin.peminjaman.show');
+    Route::get('/admin/peminjaman/export', [PeminjamanController::class, 'export'])->name('admin.peminjaman.export');
+
 
 
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
@@ -78,6 +80,9 @@ Route::middleware(['auth', 'user-access:hc'])->group(function () {
     Route::get('/hc/peminjaman/create', [HcPeminjamanController::class, 'create'])->name('hc.peminjaman.create');
     Route::post('/hc/peminjaman/store', [HcPeminjamanController::class, 'store'])->name('hc.peminjaman.store');
     Route::get('/hc/peminjaman/show/{id}', [HcPeminjamanController::class, 'show'])->name('hc.peminjaman.show');
+    Route::post('/hc/peminjaman/{id}/return', [HcPeminjamanController::class, 'ajukanPengembalian'])->name('hc.peminjaman.return');
+    Route::get('/hc/peminjaman/export', [PeminjamanController::class, 'export'])->name('hc.peminjaman.export');
+
 });
 
 Route::middleware(['auth', 'user-access:sekretaris'])->group(function () {
@@ -87,8 +92,11 @@ Route::middleware(['auth', 'user-access:sekretaris'])->group(function () {
     Route::get('/sekre/peminjaman/show/{id}', [SekrePeminjamanController::class, 'show'])->name('sekre.peminjaman.show');
     Route::get('/sekre/peminjaman/approval/{id}', [SekrePeminjamanController::class, 'approval'])->name('sekre.peminjaman.approval');
     Route::put('/sekre/peminjaman/update-status/{id}', [SekrePeminjamanController::class, 'updateStatus'])->name('sekre.peminjaman.update-status');
-    Route::get('/sekre/peminjaman/pengembalian-hilang/{id}', [SekrePeminjamanController::class, 'ShowPengembalianHilang'])->name('sekre.peminjaman.pengembalian-hilang');
-    Route::put('/sekre/peminjaman/update-status-pengembalian-hilang/{id}', [SekrePeminjamanController::class, 'updateStatusPengembalianHilang'])->name('sekre.peminjaman.update-status-pengembalian-hilang');   
+    Route::get('/sekre/peminjaman/hilang/{id}', [SekrePeminjamanController::class, 'ShowHilang'])->name('sekre.peminjaman.hilang');
+    Route::put('/sekre/peminjaman/update-status-hilang/{id}', [SekrePeminjamanController::class, 'updateStatusHilang'])->name('sekre.peminjaman.update-status-hilang');   
+    Route::post('/sekre/peminjaman/{id}/setujui-pengembalian', [SekrePeminjamanController::class, 'setujuiPengembalian'])->name('sekre.peminjaman.setujuiPengembalian');
+    Route::get('/sekre/peminjaman/export', [PeminjamanController::class, 'export'])->name('sekre.peminjaman.export');
+
 
     Route::get('/sekre/kartu-akses', [SekreKartuAksesController::class, 'index'])->name('sekre.kartu-akses');
     Route::get('/sekre/kartu-akses/create', [SekreKartuAksesController::class, 'create'])->name('sekre.kartu-akses.create');

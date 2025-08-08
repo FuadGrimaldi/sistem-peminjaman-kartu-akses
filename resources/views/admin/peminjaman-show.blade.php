@@ -200,7 +200,7 @@
                     </div>
                     
                     <div class="approval-item">
-                        <label class="approval-label">Approved By</label>
+                        <label class="approval-label">Approved/Rejected By</label>
                         <div class="approval-value">
                             @if($peminjaman->approvedBy)
                                 <div class="d-flex align-items-center">

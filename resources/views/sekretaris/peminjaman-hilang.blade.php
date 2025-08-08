@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2 style="margin-top: 1rem; margin-bottom: 2rem;">Pengembalian atau Hilang kartu</h2>
+    <h2 style="margin-top: 1rem; margin-bottom: 2rem;">Hilang kartu</h2>
 
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <form action="{{ route('sekre.peminjaman.update-status-pengembalian-hilang', $peminjaman->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('sekre.peminjaman.update-status-hilang', $peminjaman->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     
@@ -23,21 +23,10 @@
             <input type="text" class="form-control" id="nama_peminjam" name="nama_peminjam" value="{{ $peminjaman->nama_peminjam }}" readonly>
         </div>
     <div class="mb-3">
-        <label for="status" class="form-label">Status pinjaman</label>
-        <select class="form-select" id="status" name="status" required>
-            @foreach(['approved','completed'] as $status)
-                <option value="{{ $status }}" {{ $peminjaman->status == $status ? 'selected' : '' }}>
-                    {{ ucfirst($status) }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-    
-    <div class="mb-3">
-            <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian </label>
-            <input type="date" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian">
+            <label for="status" class="form-label">Status Peminjam </label>
+            <input type="text" class="form-control" id="status" name="status" value="{{ $peminjaman->status }}" readonly>
         </div>
-
+    
     <div class="mb-3">
         <label for="access_card_id" class="form-label">Access Card</label>
         <select class="form-select" id="access_card_id" name="access_card_id" required>

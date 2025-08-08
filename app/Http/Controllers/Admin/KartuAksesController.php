@@ -8,9 +8,17 @@ use App\Models\AccessCard; // Assuming you have a model for Kartu Akses
 
 class KartuAksesController extends Controller
 {
-    public function index(){
-        $aksesCard = AccessCard::paginate(10); // 10 data per halaman
-        return view('admin.kartu-akses', ['aksesCard'=> $aksesCard]); // Return the
+    public function index(Request $request){
+        $query = AccessCard::query();
+        if ($request->filled('search')) {
+            $query->where('card_number', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $aksesCard = $query->paginate(10)->withQueryString(); // 10 data per halaman
+        return view('admin.kartu-akses', compact('aksesCard')); // Return the
     }
     public function create(){
         return view('admin.kartu-akses-create'); // Return the view to create a new access card

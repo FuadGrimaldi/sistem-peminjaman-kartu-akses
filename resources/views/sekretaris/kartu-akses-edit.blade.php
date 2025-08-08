@@ -15,7 +15,6 @@
         <label for="status" class="form-label">Status</label>
         <select class="form-control" id="status" name="status" required>
             <option value="tersedia" {{ old('status', $kartuAkses->status) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
-            <option value="dipinjam" {{ old('status', $kartuAkses->status) == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
             <option value="hilang" {{ old('status', $kartuAkses->status) == 'hilang' ? 'selected' : '' }}>Hilang</option>
         </select>
     </div>

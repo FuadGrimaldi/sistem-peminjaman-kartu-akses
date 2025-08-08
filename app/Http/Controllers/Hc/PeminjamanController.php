@@ -11,11 +11,31 @@ use Illuminate\Support\Facades\Auth;
 
 class PeminjamanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $peminjaman = Peminjaman::orderBy('created_at', 'desc')->paginate(10);
-        return view('hc.peminjaman', ['peminjaman' => $peminjaman]); // Return the view with peminjaman data
+        $query = Peminjaman::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_peminjam', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('unit')) {
+            $query->where('unit', $request->unit);
+        }
+
+        if ($request->filled('mitra')) {
+            $query->where('mitra', $request->mitra);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $peminjaman = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('hc.peminjaman', compact('peminjaman'));
     }
+
 
     public function show($id)
     {
@@ -63,4 +83,20 @@ class PeminjamanController extends Controller
         // Redirect back to the index with a success message
         return redirect()->route('hc.peminjaman')->with('success', 'Peminjaman berhasil dibuat.');
     }
+
+    public function ajukanPengembalian($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        // Pastikan hanya peminjaman yang diapprove bisa ajukan pengembalian
+        if ($peminjaman->status !== 'approved') {
+            return back()->with('error', 'Hanya peminjaman yang disetujui bisa diajukan untuk pengembalian.');
+        }
+
+        $peminjaman->status = 'returned';
+        $peminjaman->save();
+
+        return redirect()->route('hc.peminjaman')->with('success', 'Pengembalian berhasil diajukan.');
+    }
+
 }

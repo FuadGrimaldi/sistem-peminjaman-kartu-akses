@@ -1,13 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex align-items-center justify-content-center">
+<div id="landing-page" class="d-flex align-items-center justify-content-center">
     <div class="card shadow-lg border-0 p-4" style="max-width: 500px; width: 100%;">
         <div class="text-center mb-4">
-            <img src="{{ asset('assets/logo/patterns.svg') }}" alt="Aset Kartu" class="img-fluid" width="100">
+            <img src="{{ asset('assets/logo/Logo_Telkom_Indonesia_2013.png') }}" alt="Aset Kartu" class="img-fluid" width="100">
             <h4 class="mt-3 fw-bold">Manajemen Aset Kartu</h4>
             <small class="text-muted">Silakan login untuk melanjutkan</small>
         </div>
+        {{-- ✅ ALERT UNTUK LOGIN GAGAL --}}
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         <form method="POST" action="{{ route('login') }}">
             @csrf
 

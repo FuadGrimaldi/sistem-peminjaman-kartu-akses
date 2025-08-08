@@ -6,6 +6,46 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Status Peminjaman') }}</div>
+                <form method="GET" action="{{ route('admin.peminjaman') }}">
+                    <div class="row g-2 align-items-end m-4">
+                        <div class="col-md-2">
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari Nama Peminjam...">
+                        </div>
+                        <div class="col-md-2">
+                            <select name="unit" class="form-select">
+                                <option value="">-- Pilih Unit --</option>
+                                @foreach(['BS','ES','GM','GOV','GSD','HOTDA','Magang BS','Magang ES','Magang GOV','PRQ','RSO','RWS','SFA','SSGS','Blanks'] as $unit)
+                                    <option value="{{ $unit }}" {{ request('unit') == $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="mitra" class="form-select">
+                                <option value="">-- Pilih Mitra --</option>
+                                @foreach(['Informedia', 'GSD', 'Telkom', 'ISH', 'Magang', 'PiNS'] as $mitra)
+                                    <option value="{{ $mitra }}" {{ request('mitra') == $mitra ? 'selected' : '' }}>{{ $mitra }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="status" class="form-select">
+                                <option value="">-- Pilih Status --</option>
+                                @foreach(['pending', 'approved', 'rejected', 'completed', 'returned'] as $status)
+                                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="{{ route('admin.peminjaman') }}" class="btn btn-secondary">Reset</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ route('admin.peminjaman.export', request()->all()) }}" class="btn text-white bg-success">
+                                Export Excel
+                            </a>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="card-body">
                     <table class="table table-striped">
@@ -42,7 +82,9 @@
                                             @elseif($pinjam->status == 'pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>
                                             @elseif($pinjam->status == 'rejected')
-                                                <span class="badge bg-danger">Hilang</span>
+                                                <span class="badge bg-danger">Ditolak</span>
+                                            @elseif($pinjam->status == 'returned')
+                                                <span class="badge bg-info">Proses Pengembalian</span>
                                             @else
                                                 <span class="badge bg-primary">{{ ucfirst($pinjam->status) }}</span>
                                             @endif 

@@ -21,7 +21,7 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status Peminjaman</label>
             <select class="form-select" id="status" name="status" required>
-                @foreach(['approved', 'rejected', 'completed'] as $status)
+                @foreach(['approved', 'rejected'] as $status)
                     <option value="{{ $status }}" {{ $peminjaman->status == $status ? 'selected' : '' }}>
                         {{ ucfirst($status) }}
                     </option>
