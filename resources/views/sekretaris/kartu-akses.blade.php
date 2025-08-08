@@ -42,9 +42,9 @@
                                     <td>{{ $card->card_number }}</td>
                                     <td>
                                         @if($card->status == 'tersedia')
-                                                <span class="badge bg-success">Approved</span>
+                                                <span class="badge bg-success">Tersedia</span>
                                             @elseif($card->status == 'dipinjam')
-                                                <span class="badge bg-primary">Pending</span>
+                                                <span class="badge bg-primary">Dipinjam</span>
                                             @else
                                                 <span class="badge bg-danger">{{ ucfirst($card->status) }}</span>
                                             @endif 
