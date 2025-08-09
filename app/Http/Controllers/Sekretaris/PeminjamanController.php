@@ -54,71 +54,61 @@ class PeminjamanController extends Controller
     }
 
     public function setujuiPengembalian($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
+{
+    $peminjaman = Peminjaman::findOrFail($id);
 
-        if ($peminjaman->status !== 'returned') {
-            return redirect()->back()->with('error', 'Status peminjaman tidak valid untuk disetujui.');
-        }
-        AccessCard::where('id', $peminjaman->access_card_id)->update(['status' => 'tersedia']);
-        $peminjaman->access_card_id = null;
-
-        $peminjaman->update([
-            'status' => 'completed',
-            'tanggal_pengembalian' => now(), // jika ada kolom ini
-            'access_card_id' => null,
-        ]);
-
-        return redirect()->route('sekre.peminjaman')->with('success', 'Pengembalian disetujui.');
+    // Pastikan statusnya sudah diajukan pengembalian
+    if ($peminjaman->status !== 'returned') {
+        return redirect()->back()->with('error', 'Status peminjaman tidak valid untuk disetujui.');
     }
+
+    $tanggalSekarang = now();
+
+    // Hitung durasi dari tanggal_peminjaman sampai sekarang
+    $tanggalPeminjaman = \Carbon\Carbon::parse($peminjaman->tanggal_peminjaman);
+    $durasi = $tanggalPeminjaman->diffInDays($tanggalSekarang);
+
+    // Update status kartu jadi tersedia jika ada
+    if ($peminjaman->access_card_id) {
+        AccessCard::where('id', $peminjaman->access_card_id)->update(['status' => 'tersedia']);
+    }
+
+    // Update data peminjaman
+    $peminjaman->update([
+        'status' => 'completed',
+        'tanggal_pengembalian' => $tanggalSekarang,
+        'durasi' => $durasi,
+        'access_card_id' => null,
+    ]);
+
+    return redirect()->route('sekre.peminjaman')->with('success', 'Pengembalian disetujui.');
+}
+
 
     
     public function updateStatusHilang(Request $request, $id)
-{
-    $request->validate([
-        'access_card_id' => 'required|exists:access_cards,id',
-        'tanggal_pengembalian' => 'nullable|date',
-        'requested_by_id' => 'required|exists:users,id',
-        'status' => 'required|in:pending,approved,rejected,completed',
-    ]);
+    {
+        $request->validate([
+            'access_card_id' => 'required|exists:access_cards,id',
+            'requested_by_id' => 'required|exists:users,id',
+            'status' => 'required|in:pending,approved,rejected,completed',
+        ]);
 
-    $data = $request->all();
-    $data['approved_by_id'] = Auth::id();
-    
+        $data = $request->all();
+        $data['approved_by_id'] = Auth::id();
+        
 
-    $peminjaman = Peminjaman::findOrFail($id);
-
-    // 🔽 Cek apakah checkbox "kartu hilang" dicentang
-    if ($request->has('kartu_hilang') && $request->input('kartu_hilang')) {
-        // Set status peminjaman jadi pending, dan kartu jadi hilang
+        $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->update([
             'status' => 'pending',
-            'access_card_id' => $request->access_card_id,
-            'tanggal_pengembalian' => $request->tanggal_pengembalian,
             'requested_by_id' => $request->requested_by_id,
             'approved_by_id' => Auth::id(),
             'access_card_id' => null
         ]);
         AccessCard::where('id', $request->access_card_id)->update(['status' => 'hilang']);
 
-    } else {
-        // 🔽 Logic normal
-        
-
-        if ($data['status'] === 'approved') {
-            AccessCard::where('id', $data['access_card_id'])->update(['status' => 'dipinjam']);
-        } elseif ($data['status'] === 'completed') {
-            AccessCard::where('id', $data['access_card_id'])->update(['status' => 'tersedia']);
-            $data['access_card_id'] = null;
-        } else {
-            AccessCard::where('id', $data['access_card_id'])->update(['status' => 'tersedia']);
-            $data['access_card_id'] = null;
-        }
-        $peminjaman->update($data);
+        return redirect()->route('sekre.peminjaman')->with('success', 'Peminjaman berhasil diperbarui.');
     }
-
-    return redirect()->route('sekre.peminjaman')->with('success', 'Peminjaman berhasil diperbarui.');
-}
 
     public function approval($id)
     {

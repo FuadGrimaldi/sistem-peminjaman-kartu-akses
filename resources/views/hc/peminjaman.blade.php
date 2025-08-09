@@ -55,7 +55,7 @@
                                 <th>Jabatan</th>
                                 <th>Lampiran</th>
                                 <th>Tgl Peminjaman</th>
-                                <th>Durasi (Bulan)</th>
+                                <th>Durasi (hari)</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -87,7 +87,7 @@
                                             @else
                                                 <span class="badge bg-primary">{{ ucfirst($pinjam->status) }}</span>
                                             @endif        
-                                </td>
+                                    </td>
                                     <td>
                                         <!-- Add action buttons here -->
                                         <a href="{{route('hc.peminjaman.show', $pinjam->id)}}" class="btn btn-secondary btn-sm">View</a>
@@ -97,27 +97,58 @@
                                             Ajukan Pengembalian
                                         </button>
 
-                                        <!-- Modal Konfirmasi Pengembalian -->
                                         <div class="modal fade" id="returnModal{{ $pinjam->id }}" tabindex="-1" aria-labelledby="returnModalLabel{{ $pinjam->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <form method="POST" action="{{ route('hc.peminjaman.return', $pinjam->id) }}">
-                                                    @csrf
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="returnModalLabel{{ $pinjam->id }}">Konfirmasi Pengembalian</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                        <div class="modal-dialog">
+                                            <form method="POST" action="{{ route('hc.peminjaman.return', $pinjam->id) }}" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="returnModalLabel{{ $pinjam->id }}">Konfirmasi Pengembalian</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        <p>Anda yakin ingin mengajukan pengembalian untuk <strong>{{ $pinjam->nama_peminjam }}</strong>?</p>
+                                                        
+                                                        <div class="form-check mb-3">
+                                                            <input class="form-check-input" type="checkbox" value="1" id="tanpaLampiran{{ $pinjam->id }}">
+                                                            <label class="form-check-label" for="tanpaLampiran{{ $pinjam->id }}">
+                                                                Ajukan tanpa lampiran
+                                                            </label>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            Anda yakin ingin mengajukan pengembalian untuk <strong>{{ $pinjam->nama_peminjam }}</strong>?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-primary">Ajukan Pengembalian</button>
+
+                                                        <div class="mb-3" id="lampiranContainer{{ $pinjam->id }}">
+                                                            <label for="lampiran_pengembalian{{ $pinjam->id }}" class="form-label">Lampiran Pengembalian (PDF)</label>
+                                                            <input type="file" name="lampiran" id="lampiran_pengembalian{{ $pinjam->id }}" class="form-control" accept="application/pdf">
                                                         </div>
                                                     </div>
-                                                </form>
-                                            </div>
+
+                                                    <div class="modal-footer">
+                                                        <small class="text-danger me-auto">
+                                                            *Tanggal pengembalian akan otomatis diisi jika pengembalian sudah disetujui
+                                                        </small>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Ajukan Pengembalian</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
+                                    </div>
+
+                                    <script>
+                                    document.getElementById('tanpaLampiran{{ $pinjam->id }}').addEventListener('change', function() {
+                                        const fileInput = document.getElementById('lampiran_pengembalian{{ $pinjam->id }}');
+                                        const container = document.getElementById('lampiranContainer{{ $pinjam->id }}');
+                                        if (this.checked) {
+                                            container.style.display = 'none';
+                                            fileInput.value = '';
+                                        } else {
+                                            container.style.display = 'block';
+                                        }
+                                    });
+                                    </script>
+
+
                                     @endif                                     
                                     </td>
                                 </tr>

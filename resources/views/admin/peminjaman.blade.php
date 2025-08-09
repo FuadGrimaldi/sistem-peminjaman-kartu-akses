@@ -56,7 +56,7 @@
                                 <th>Jabatan</th>
                                 <th>Lampiran</th>
                                 <th>Tgl Peminjaman</th>
-                                <th>Durasi (bulan)</th>
+                                <th>Durasi (hari)</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>

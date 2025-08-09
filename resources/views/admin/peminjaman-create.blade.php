@@ -59,15 +59,52 @@
                 <option value="Blanks">Blanks</option>
             </select>
         </div>
-
         <div class="mb-3">
             <label for="jabatan" class="form-label">Jabatan</label>
-            <input type="text" class="form-control" id="jabatan" name="jabatan" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="durasi" class="form-label">Durasi <span style="color: blue;">(Dapat dikosongkan)</span></label>
-            <input type="number" class="form-control" id="durasi" name="durasi">
+                
+                <select name="jabatan" id="jabatan" class="form-control" required>
+                    <option value="">-- Pilih Jabatan --</option>
+                    <option>ACCOUNT MANAGER</option>
+                    <option>ACCOUNT MANAGER 1</option>
+                    <option>ACCOUNT MANAGER 2</option>
+                    <option>ADMIN</option>
+                    <option>ADMIN SUPPORT</option>
+                    <option>AMEX</option>
+                    <option>ANGGOTA SECURITY POS JAGA</option>
+                    <option>CLEANER</option>
+                    <option>DEFA</option>
+                    <option>Digital Creative Witel</option>
+                    <option>ENGINEER QC &amp; MANAGED SERVICE</option>
+                    <option>EOS</option>
+                    <option>EOS SDA AREA YOGYAKARTA</option>
+                    <option>GM WITEL YOGYAKARTA JATENG SELATAN</option>
+                    <option>indibiz solution expert ISE</option>
+                    <option>Inputer</option>
+                    <option>JR OFFICER OPERTION DAN PROJECT DELIVE</option>
+                    <option>KAPOK SECURITY POS JAGA</option>
+                    <option>KOORDINATOR ME &amp; SIPIL</option>
+                    <option>KOORDINATOR SECURITY &amp; PARKING</option>
+                    <option>KP</option>
+                    <option>MANAGER AREA</option>
+                    <option>MGR GOVERNMENT SERVICE</option>
+                    <option>MGR LARGE ENTERPRISE SERVICE AREA V</option>
+                    <option>MGR PERFORMANCE, RISK &amp; QOS</option>
+                    <option>MGR SHARED SERVICE &amp; GENERAL SUPPORT</option>
+                    <option>MGR WITEL BUSINESS SERVICE</option>
+                    <option>OFF 1 COLLECTION &amp; DEBT MGT</option>
+                    <option>OFF 1 QUALITY OF SALES &amp; REVAS</option>
+                    <option>OFF 1 SALES &amp; TEAM SUPPORT</option>
+                    <option>OFF 1 SALES ENGINEER</option>
+                    <option>OFF 2 FINANCE &amp; HC</option>
+                    <option>OFF 2 ORDER MANAGEMENT</option>
+                    <option>OFF 3 PERFORMANCE &amp; RISK MANAGEMEN</option>
+                    <option>OFF 3 SALES OPERATION</option>
+                    <option>Sekertaris GM</option>
+                    <option>SENIOR ACCOUNT MANAGER</option>
+                    <option>TEKNISI ME</option>
+                    <option>TERRITORY REP OFFICER</option>
+                    <option>Blanks</option>
+                </select>
         </div>
 
         <div class="mb-3">
@@ -84,16 +121,14 @@
             <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" name="status" required>
                 <option value="approved">Approved</option>
-                <option value="pending">Pending</option>
                 <option value="rejected">Rejected</option>
                 <option value="completed">Completed</option>
-                <option value="returned">Returned</option>
             </select>
         </div>
 
         <div class="mb-3">
-            <label for="access_card_id" class="form-label">Access Card</label>
-            <select class="form-select" id="access_card_id" name="access_card_id" required>
+            <label for="access_card_id" class="form-label">Access Card <span style="color: blue;">(Kosongkan jika status completed)</span></label>
+            <select class="form-select" id="access_card_id" name="access_card_id" >
                 <option value="">-- Pilih Kartu Akses --</option>
                 @foreach($accessCards as $card)
                     <option value="{{ $card->id }}">{{ $card->card_number }}</option>
@@ -102,7 +137,7 @@
         </div>
         <div class="mb-3">
             <label for="requested_by_id" class="form-label">Request By</label>
-            <select class="form-select" id="requested_by_id" name="requested_by_id" required>
+            <select class="form-select" id="requested_by_id" name="requested_by_id" >
                 <option value="">-- Pilih User HC --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>

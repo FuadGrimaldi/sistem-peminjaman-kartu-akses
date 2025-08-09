@@ -159,6 +159,12 @@
                             <h5 class="mb-2">Approved</h5>
                             <p class="text-muted mb-0">Peminjaman disetujui</p>
                         </div>
+                        @elseif($peminjaman->status == 'returned')
+                        <div class="status-badge rejected">
+                            <i class="bi bi-x-circle-fill fs-1 mb-3"></i>
+                            <h5 class="mb-2">Returned</h5>
+                            <p class="text-muted mb-0">Pengembalian peminjaman</p>
+                        </div>
                     @elseif($peminjaman->status == 'rejected')
                         <div class="status-badge rejected">
                             <i class="bi bi-x-circle-fill fs-1 mb-3"></i>

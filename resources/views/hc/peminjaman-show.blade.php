@@ -165,6 +165,13 @@
                             <h5 class="mb-2">Rejected</h5>
                             <p class="text-muted mb-0">Peminjaman ditolak</p>
                         </div>
+
+                    @elseif($peminjaman->status == 'returned')
+                        <div class="status-badge rejected">
+                            <i class="bi bi-x-circle-fill fs-1 mb-3"></i>
+                            <h5 class="mb-2">Returned</h5>
+                            <p class="text-muted mb-0">Pengembalian peminjaman</p>
+                        </div>
                     @elseif($peminjaman->status == 'completed')
                         <div class="status-badge completed">
                             <i class="bi bi-check2-all fs-1 mb-3"></i>

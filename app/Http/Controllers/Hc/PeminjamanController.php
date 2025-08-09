@@ -8,6 +8,7 @@ use App\Models\Peminjaman; // Assuming you have a model for Peminjaman
 use App\Models\AccessCard; // Assuming you have a model for AccessCard
 use App\Models\User; // Assuming you have a model for User
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PeminjamanController extends Controller
 {
@@ -60,7 +61,7 @@ class PeminjamanController extends Controller
             'nama_peminjam' => 'required',
             'jabatan' => 'required',
             'nik' => 'required',
-            'durasi' => 'required',
+            'durasi' => 'nullable|integer', // Default durasi 258 hari  
             'mitra' => "required|in:Informedia,GSD,Telkom,ISH,Magang,PiNS",
             'unit' => 'required|in:BS,ES,GM,GOV,GSD,HOTDA,Magang BS,Magang ES,Magang GOV,PRQ,RSO,RWS,SFA,SSGS,Blanks',
             'tanggal_peminjaman' => 'required|date',
@@ -71,6 +72,15 @@ class PeminjamanController extends Controller
             'lampiran' => 'nullable|file|mimes:pdf|max:2048', // Assuming lampiran is a string, adjust as necessary
         ]);
         $data = $request->all();
+        // Set default durasi if not provided and tanggal_pengembalian is not set
+        if (!$request->filled('durasi') && !$request->filled('tanggal_pengembalian')) {
+            $data['durasi'] = 258;
+        }
+        if ($request->filled('tanggal_peminjaman') && $request->filled('tanggal_pengembalian')) {
+            $tanggalPeminjaman = \Carbon\Carbon::parse($request->input('tanggal_peminjaman'));
+            $tanggalPengembalian = \Carbon\Carbon::parse($request->input('tanggal_pengembalian'));
+            $data['durasi'] = $tanggalPeminjaman->diffInDays($tanggalPengembalian);
+        }
         if ($request->hasFile('lampiran')) {
             $file = $request->file('lampiran');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -84,19 +94,36 @@ class PeminjamanController extends Controller
         return redirect()->route('hc.peminjaman')->with('success', 'Peminjaman berhasil dibuat.');
     }
 
-    public function ajukanPengembalian($id)
+    
+    public function ajukanPengembalian(Request $request, $id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
-        // Pastikan hanya peminjaman yang diapprove bisa ajukan pengembalian
         if ($peminjaman->status !== 'approved') {
             return back()->with('error', 'Hanya peminjaman yang disetujui bisa diajukan untuk pengembalian.');
+        }
+
+        // Validasi lampiran
+        $request->validate([
+            'lampiran' => 'nullable|file|mimes:pdf|max:2048',
+        ]);
+        if ($request->hasFile('lampiran')) {
+        // hapus lampiran lama kalau ada
+
+        // Hapus lampiran lama jika ada
+            if ($peminjaman->lampiran && Storage::disk('public')->exists($peminjaman->lampiran)) {
+                Storage::disk('public')->delete($peminjaman->lampiran);
+            }
+            $file = $request->file('lampiran');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $path = $file->storeAs('lampiran_pengembalian', $filename, 'public');
+            $peminjaman->lampiran = $path;
         }
 
         $peminjaman->status = 'returned';
         $peminjaman->save();
 
-        return redirect()->route('hc.peminjaman')->with('success', 'Pengembalian berhasil diajukan.');
+        return redirect()->route('hc.peminjaman')->with('success', 'Pengembalian berhasil diajukan dengan lampiran baru.');
     }
 
 }

@@ -45,15 +45,35 @@
                 @endforeach
             </select>
         </div>
+        
         <div class="mb-3">
             <label for="jabatan" class="form-label">Jabatan</label>
-            <input type="text" class="form-control" id="jabatan" name="jabatan" value="{{ $peminjaman->jabatan }}" required>
+            <select name="jabatan" id="jabatan" class="form-control" required>
+                <option value="">-- Pilih Jabatan --</option>
+                @foreach([
+                    'ACCOUNT MANAGER','ACCOUNT MANAGER 1','ACCOUNT MANAGER 2','ADMIN','ADMIN SUPPORT',
+                    'AMEX','ANGGOTA SECURITY POS JAGA','CLEANER','DEFA','Digital Creative Witel',
+                    'ENGINEER QC & MANAGED SERVICE','EOS','EOS SDA AREA YOGYAKARTA',
+                    'GM WITEL YOGYAKARTA JATENG SELATAN','indibiz solution expert ISE','Inputer',
+                    'JR OFFICER OPERTION DAN PROJECT DELIVE','KAPOK SECURITY POS JAGA',
+                    'KOORDINATOR ME & SIPIL','KOORDINATOR SECURITY & PARKING','KP','MANAGER AREA',
+                    'MGR GOVERNMENT SERVICE','MGR LARGE ENTERPRISE SERVICE AREA V',
+                    'MGR PERFORMANCE, RISK & QOS','MGR SHARED SERVICE & GENERAL SUPPORT',
+                    'MGR WITEL BUSINESS SERVICE','OFF 1 COLLECTION & DEBT MGT',
+                    'OFF 1 QUALITY OF SALES & REVAS','OFF 1 SALES & TEAM SUPPORT','OFF 1 SALES ENGINEER',
+                    'OFF 2 FINANCE & HC','OFF 2 ORDER MANAGEMENT','OFF 3 PERFORMANCE & RISK MANAGEMEN',
+                    'OFF 3 SALES OPERATION','Sekertaris GM','SENIOR ACCOUNT MANAGER','TEKNISI ME',
+                    'TERRITORY REP OFFICER','Blanks'
+                ] as $jabatan)
+                    <option value="{{ $jabatan }}" {{ $peminjaman->jabatan == $jabatan ? 'selected' : '' }}>
+                        {{ $jabatan }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
-        <div class="mb-3">
-            <label for="durasi" class="form-label">Durasi <span style="color: blue;">(Dapat dikosongkan)</span></label>
-            <input type="number" class="form-control" id="durasi" name="durasi" value="{{ $peminjaman->durasi }}">
-        </div>
+
+
 
         <div class="mb-3">
             <label for="tanggal_peminjaman" class="form-label">Tanggal Peminjaman</label>
@@ -68,7 +88,7 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" name="status" required>
-                @foreach(['pending', 'approved', 'rejected', 'completed', 'returned'] as $status)
+                @foreach([ 'approved', 'rejected', 'completed',] as $status)
                 
                     <option value="{{ $status }}" {{ $peminjaman->status == $status ? 'selected' : '' }}>
                         {{ ucfirst($status) }}
@@ -80,6 +100,7 @@
         <div class="mb-3">
     <label for="access_card_id" class="form-label">Access Card</label>
     <select class="form-select" id="access_card_id" name="access_card_id" required>
+        <option value="">-- Pilih Kartu Akses --</option>
         {{-- Kartu yang sedang dipakai tampil dulu --}}
         @if($peminjaman->accessCard)
             <option value="{{ $peminjaman->accessCard->id }}" selected>
@@ -101,6 +122,7 @@
         <div class="mb-3">
             <label for="requested_by_id" class="form-label">Request By</label>
             <select class="form-select" id="requested_by_id" name="requested_by_id" required>
+                <option value="">-- Pilih HC --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ $peminjaman->requested_by_id == $user->id ? 'selected' : '' }}>
                         {{ $user->name }}

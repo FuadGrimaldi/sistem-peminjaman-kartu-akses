@@ -55,7 +55,7 @@
                                 <th>Jabatan</th>
                                 <th>Lampiran</th>
                                 <th>Tgl Peminjaman</th>
-                                <th>Durasi (Bulan)</th>
+                                <th>Durasi (hari)</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -110,15 +110,30 @@
                                                 <div class="modal-dialog">
                                                     <form method="POST" action="{{ route('sekre.peminjaman.setujuiPengembalian', $pinjam->id) }}">
                                                         @csrf
-                                                        @method('POST')
+
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="modalLabel{{ $pinjam->id }}">Konfirmasi Pengembalian</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                                             </div>
+
                                                             <div class="modal-body">
-                                                                Yakin ingin menyetujui pengembalian dari <strong>{{ $pinjam->nama_peminjam }}</strong>?
+                                                                @if($pinjam->lampiran)
+                                                                    <p>
+                                                                        <a href="{{ asset('storage/' . $pinjam->lampiran) }}" target="_blank" class="btn btn-link p-0">
+                                                                            📎 Lihat Lampiran
+                                                                        </a>
+                                                                    </p>
+                                                                @else
+                                                                    <p><em>Tidak ada lampiran</em></p>
+                                                                @endif
+
+                                                                <p>
+                                                                    Yakin ingin menyetujui pengembalian dari 
+                                                                    <strong>{{ $pinjam->nama_peminjam }}</strong>?
+                                                                </p>
                                                             </div>
+
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                                                 <button type="submit" class="btn btn-success">Setujui</button>
@@ -127,6 +142,7 @@
                                                     </form>
                                                 </div>
                                             </div>
+
                                         @endif
 
                                     </td>

@@ -65,9 +65,9 @@ class PeminjamanController extends Controller
             'unit' => 'required|in:BS,ES,GM,GOV,GSD,HOTDA,Magang BS,Magang ES,Magang GOV,PRQ,RSO,RWS,SFA,SSGS,Blanks',
             'tanggal_peminjaman' => 'required|date',
             'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_peminjaman',
-            'status' => 'required|in:pending,approved,rejected,completed',
-            'requested_by_id' => 'required|exists:users,id', // Assuming the user is the one approving
-            'access_card_id' => 'required|exists:access_cards,id',
+            'status' => 'required|in:pending,approved,rejected,completed,returned',
+            'requested_by_id' => 'nullable|exists:users,id', // Assuming the user is the one approving
+            'access_card_id' => 'nullable|exists:access_cards,id',
             'catatan_admin' => 'nullable|string',
             'lampiran' => 'nullable|file|mimes:pdf|max:2048', // Assuming lampiran is a string, adjust as necessary
         ]);
@@ -79,7 +79,13 @@ class PeminjamanController extends Controller
             $path = $file->storeAs('lampiran_peminjaman', $filename, 'public');
             $data['lampiran'] = $path; // save relative path
         }
-
+        if ($request->filled('tanggal_peminjaman') && $request->filled('tanggal_pengembalian')) {
+            $tanggalPeminjaman = \Carbon\Carbon::parse($request->input('tanggal_peminjaman'));
+            $tanggalPengembalian = \Carbon\Carbon::parse($request->input('tanggal_pengembalian'));
+            $data['durasi'] = $tanggalPeminjaman->diffInDays($tanggalPengembalian);
+        } else {
+            $data['durasi'] = 258; // Default durasi if not provided
+        }
         // Create Peminjaman Record
         Peminjaman::create($data);
         if ($data['status'] === 'approved') {
@@ -113,15 +119,23 @@ class PeminjamanController extends Controller
             'unit' => 'required|in:BS,ES,GM,GOV,GSD,HOTDA,Magang BS,Magang ES,Magang GOV,PRQ,RSO,RWS,SFA,SSGS,Blanks',
             'tanggal_peminjaman' => 'required|date',
             'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_peminjaman',
-            'status' => 'required|in:pending,approved,rejected,completed',
-            'requested_by_id' => 'required|exists:users,id', // Assuming the user is the one approving
-            'access_card_id' => 'required|exists:access_cards,id',
+            'status' => 'required|in:pending,approved,rejected,completed,returned',
+            'requested_by_id' => 'nullable|exists:users,id', // Assuming the user is the one approving
+            'access_card_id' => 'nullable|exists:access_cards,id',
             'catatan_admin' => 'nullable|string',
             'lampiran' => 'nullable|file|mimes:pdf|max:2048', // Assuming lampiran is a string, adjust as necessary
         ]);
+
         $peminjaman = Peminjaman::findOrFail($id);
         $data = $request->all();
         $data['approved_by_id'] = Auth::id();
+        if ($request->filled('tanggal_peminjaman') && $request->filled('tanggal_pengembalian')) {
+            $tanggalPeminjaman = \Carbon\Carbon::parse($request->input('tanggal_peminjaman'));
+            $tanggalPengembalian = \Carbon\Carbon::parse($request->input('tanggal_pengembalian'));
+            $data['durasi'] = $tanggalPeminjaman->diffInDays($tanggalPengembalian);
+        } else {
+            $data['durasi'] = 258; // Default durasi if not provided
+        }
         if ($request->hasFile('lampiran')) {
             $file = $request->file('lampiran');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -131,27 +145,35 @@ class PeminjamanController extends Controller
             unset($data['lampiran']); // If no new file is uploaded, remove the key
         }
         // Cek apakah access_card_id berubah
-    $oldCardId = $peminjaman->access_card_id;
-    $newCardId = $request->input('access_card_id');
+        $oldCardId = $peminjaman->access_card_id;
+        $newCardId = $request->input('access_card_id');
 
-    // Update data peminjaman
-    $peminjaman->update($data);
+        
 
-    // Update status kartu lama dan baru HANYA jika id-nya berubah
-    if ($oldCardId != $newCardId) {
-        // Set kartu lama menjadi tersedia
-        if ($oldCardId) {
-            AccessCard::where('id', $oldCardId)->update(['status' => 'tersedia']);
-        }
-        // Set kartu baru menjadi dipinjam
-        AccessCard::where('id', $newCardId)->update(['status' => 'dipinjam']);
-    } else {
-        // Jika kartu tidak berubah, pastikan tetap dipinjam jika status approved
-        if ($data['status'] === 'approved') {
+        // Update status kartu lama dan baru HANYA jika id-nya berubah
+        if ($oldCardId != $newCardId) {
+            // Set kartu lama menjadi tersedia
+            if ($oldCardId) {
+                AccessCard::where('id', $oldCardId)->update(['status' => 'tersedia']);
+            }
+            // Set kartu baru menjadi dipinjam
             AccessCard::where('id', $newCardId)->update(['status' => 'dipinjam']);
+        } else {
+            // Jika kartu tidak berubah, pastikan tetap dipinjam jika status approved
+            if ($data['status'] === 'approved') {
+                AccessCard::where('id', $newCardId)->update(['status' => 'dipinjam']);
+            }
         }
-    }
-        // Redirect back to the index with a success message
+
+
+        if ($data['status'] === 'completed') {
+            // Jika statusnya completed, ubah status kartu menjadi tersedia
+            AccessCard::where('id', $newCardId)->update(['status' => 'tersedia']);
+            $data['access_card_id'] = null; // Set access_card_id to null if completed
+        }
+        // Update data peminjaman
+        $peminjaman->update($data);
+            // Redirect back to the index with a success message
         return redirect()->route('admin.peminjaman')->with('success', 'Peminjaman berhasil diperbarui.');
     }
     public function destroy($id)

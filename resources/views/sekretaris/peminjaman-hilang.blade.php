@@ -50,7 +50,7 @@
     <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" value="1" id="kartu_hilang" name="kartu_hilang">
         <label class="form-check-labe text-danger" for="kartu_hilang">
-            Kartu Hilang
+            Saya menyatakan bahwa kartu ini hilang dan tidak dapat dikembalikan.
         </label>
     </div>
 

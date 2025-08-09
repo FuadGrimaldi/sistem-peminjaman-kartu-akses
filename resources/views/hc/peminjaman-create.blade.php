@@ -62,17 +62,59 @@
 
         <div class="mb-3">
             <label for="jabatan" class="form-label">Jabatan</label>
-            <input type="text" class="form-control" id="jabatan" name="jabatan" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="durasi" class="form-label">Durasi Peminjaman (Bulan) <span style="color: blue;">(Dapat dikosongkan)</span></label>
-            <input type="number" class="form-control" id="durasi" name="durasi" required>
+                
+                <select name="jabatan" id="jabatan" class="form-control" required>
+                    <option value="">-- Pilih Jabatan --</option>
+                    <option>ACCOUNT MANAGER</option>
+                    <option>ACCOUNT MANAGER 1</option>
+                    <option>ACCOUNT MANAGER 2</option>
+                    <option>ADMIN</option>
+                    <option>ADMIN SUPPORT</option>
+                    <option>AMEX</option>
+                    <option>ANGGOTA SECURITY POS JAGA</option>
+                    <option>CLEANER</option>
+                    <option>DEFA</option>
+                    <option>Digital Creative Witel</option>
+                    <option>ENGINEER QC &amp; MANAGED SERVICE</option>
+                    <option>EOS</option>
+                    <option>EOS SDA AREA YOGYAKARTA</option>
+                    <option>GM WITEL YOGYAKARTA JATENG SELATAN</option>
+                    <option>indibiz solution expert ISE</option>
+                    <option>Inputer</option>
+                    <option>JR OFFICER OPERTION DAN PROJECT DELIVE</option>
+                    <option>KAPOK SECURITY POS JAGA</option>
+                    <option>KOORDINATOR ME &amp; SIPIL</option>
+                    <option>KOORDINATOR SECURITY &amp; PARKING</option>
+                    <option>KP</option>
+                    <option>MANAGER AREA</option>
+                    <option>MGR GOVERNMENT SERVICE</option>
+                    <option>MGR LARGE ENTERPRISE SERVICE AREA V</option>
+                    <option>MGR PERFORMANCE, RISK &amp; QOS</option>
+                    <option>MGR SHARED SERVICE &amp; GENERAL SUPPORT</option>
+                    <option>MGR WITEL BUSINESS SERVICE</option>
+                    <option>OFF 1 COLLECTION &amp; DEBT MGT</option>
+                    <option>OFF 1 QUALITY OF SALES &amp; REVAS</option>
+                    <option>OFF 1 SALES &amp; TEAM SUPPORT</option>
+                    <option>OFF 1 SALES ENGINEER</option>
+                    <option>OFF 2 FINANCE &amp; HC</option>
+                    <option>OFF 2 ORDER MANAGEMENT</option>
+                    <option>OFF 3 PERFORMANCE &amp; RISK MANAGEMEN</option>
+                    <option>OFF 3 SALES OPERATION</option>
+                    <option>Sekertaris GM</option>
+                    <option>SENIOR ACCOUNT MANAGER</option>
+                    <option>TEKNISI ME</option>
+                    <option>TERRITORY REP OFFICER</option>
+                    <option>Blanks</option>
+                </select>
         </div>
 
         <div class="mb-3">
             <label for="tanggal_peminjaman" class="form-label">Tanggal Peminjaman</label>
             <input type="date" class="form-control" id="tanggal_peminjaman" name="tanggal_peminjaman" required>
+        </div>
+        <div class="mb-3">
+            <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian <span style="color: blue;">(Dapat di kosongkan dengan default durasi 258 hari)</span></label>
+            <input type="date" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian">
         </div>
 
         <div class="mb-3">
@@ -89,7 +131,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="lampiran" class="form-label">Lampiran (PDF)</label>
+            <label for="lampiran" class="form-label">Lampiran pengajuan (PDF)</label>
             <input type="file" class="form-control" id="lampiran" name="lampiran" accept="application/pdf">
         </div>
 
