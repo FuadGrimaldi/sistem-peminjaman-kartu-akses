@@ -179,7 +179,13 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <h6 class="font-weight-bold text-primary">Statistik Peminjaman per Bulan</h6>
-                <canvas id="peminjamanChart" height="120"></canvas>
+                <canvas id="peminjamanChart" height="120" 
+                        data-months="{{ json_encode($months) }}"
+                        data-approved="{{ json_encode($approvedData) }}"
+                        data-pending="{{ json_encode($pendingData) }}"
+                        data-rejected="{{ json_encode($rejectedData) }}"
+                        data-completed="{{ json_encode($completedData) }}">
+                </canvas>
             </div>
         </div>
     </div>
@@ -190,13 +196,14 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const labels = @json($months);
-        const approvedData = @json($approvedData);
-        const pendingData = @json($pendingData);
-        const rejectedData = @json($rejectedData);
-        const completedData = @json($completedData);
+        const canvas = document.getElementById('peminjamanChart');
+        const labels = JSON.parse(canvas.dataset.months);
+        const approvedData = JSON.parse(canvas.dataset.approved);
+        const pendingData = JSON.parse(canvas.dataset.pending);
+        const rejectedData = JSON.parse(canvas.dataset.rejected);
+        const completedData = JSON.parse(canvas.dataset.completed);
 
-        const ctx = document.getElementById('peminjamanChart').getContext('2d');
+        const ctx = canvas.getContext('2d');
         new Chart(ctx, {
             type: 'line', // ubah jadi line chart
             data: {
