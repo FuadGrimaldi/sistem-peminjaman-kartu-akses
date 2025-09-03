@@ -146,7 +146,7 @@
                                             @elseif($item->status == 'pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>
                                             @elseif($item->status == 'rejected')
-                                                <span class="badge bg-danger">Hilang</span>
+                                                <span class="badge bg-danger">Ditolak</span>
                                             @else
                                                 <span class="badge bg-primary">{{ ucfirst($item->status) }}</span>
                                             @endif

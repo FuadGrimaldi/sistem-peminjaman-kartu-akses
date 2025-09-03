@@ -179,6 +179,16 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <h6 class="font-weight-bold text-primary">Statistik Peminjaman per Bulan</h6>
+                <form method="GET" action="{{ route('admin.home') }}">
+                    <div class="form-group">
+                        <label for="year">Pilih Tahun:</label>
+                        <select name="year" id="year" onchange="this.form.submit()" class="form-control w-auto d-inline-block">
+                            @foreach($availableYears as $y)
+                                <option value="{{ $y }}" {{ $y == $year ? 'selected' : '' }}>{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
                 <canvas id="peminjamanChart" height="120" 
                         data-months="{{ json_encode($months) }}"
                         data-approved="{{ json_encode($approvedData) }}"

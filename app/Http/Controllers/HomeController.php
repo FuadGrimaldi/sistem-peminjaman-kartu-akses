@@ -40,7 +40,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-   public function adminHome(): View
+   public function adminHome(Request $request)
 {
     $totalUsers = User::count();
     $totalAccessCards = AccessCard::count();
@@ -52,7 +52,7 @@ class HomeController extends Controller
     $latestPeminjaman = Peminjaman::orderBy('updated_at', 'desc')->take(5)->get();
 
     // 🔹 Statistik per bulan
-    $year = Carbon::now()->year;
+    $year = $request->get('year', Carbon::now()->year);
     $months = collect(range(1, 12))->map(function ($m) {
         return Carbon::create()->month($m)->translatedFormat('F');
     });
@@ -93,6 +93,11 @@ class HomeController extends Controller
         $rejectedData[] = $rejectedPerMonth[$bulan] ?? 0;
         $completedData[] = $completedPerMonth[$bulan] ?? 0;
     }
+    // 🔹 Ambil semua tahun yg tersedia di tabel Peminjaman
+    $availableYears = Peminjaman::selectRaw('YEAR(tanggal_peminjaman) as tahun')
+        ->distinct()
+        ->orderBy('tahun', 'desc')
+        ->pluck('tahun');
 
     return view('adminHome', compact(
         'totalUsers',
@@ -107,7 +112,9 @@ class HomeController extends Controller
         'approvedData',
         'pendingData',
         'rejectedData',
-        'completedData'
+        'completedData',
+        'availableYears',
+        'year'
     ));
 }
   
