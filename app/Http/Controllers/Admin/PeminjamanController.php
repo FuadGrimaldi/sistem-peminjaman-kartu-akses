@@ -15,7 +15,7 @@ class PeminjamanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Peminjaman::query();
+        $query = Peminjaman::with('AccessCard');
 
         if ($request->filled('search')) {
             $query->where('nama_peminjam', 'like', '%' . $request->search . '%');
@@ -153,8 +153,9 @@ class PeminjamanController extends Controller
         // Update status kartu lama dan baru HANYA jika id-nya berubah
         if ($oldCardId != $newCardId) {
             // Set kartu lama menjadi tersedia
-            if ($oldCardId) {
-                AccessCard::where('id', $oldCardId)->update(['status' => 'tersedia']);
+            $oldCard = AccessCard::find($oldCardId);
+            if ($oldCard && $oldCard->status !== 'hilang') {
+                $oldCard->update(['status' => 'tersedia']);
             }
             // Set kartu baru menjadi dipinjam
             AccessCard::where('id', $newCardId)->update(['status' => 'dipinjam']);

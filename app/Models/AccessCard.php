@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class AccessCard extends Model
 {
     use HasFactory;
-    protected $fillable = ['card_number', 'status'];
+    protected $fillable = ['card_number', 'code' ,'status'];
     protected $casts = [
         'status' => 'string',
     ];
+
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasMany(Peminjaman::class, );
     }
     public function scopeAvailable($query)
     {

@@ -26,11 +26,12 @@
                     </div>
                 </form>
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Card Number</th>
+                                <th>Code</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -40,6 +41,7 @@
                                 <tr>
                                     <td>{{ $aksesCard->firstItem() + $loop->index }}</td>
                                     <td>{{ $card->card_number }}</td>
+                                    <td>{{ $card->code ?? '-' }}</td>
                                     <td>
                                         @if($card->status == 'tersedia')
                                                 <span class="badge bg-success">Tersedia</span>

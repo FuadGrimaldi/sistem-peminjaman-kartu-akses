@@ -10,6 +10,10 @@
             <input type="text" class="form-control" id="card_number" name="card_number" required>
         </div>
         <div class="mb-3">
+            <label for="code" class="form-label">Code Kartu</label>
+            <input type="text" class="form-control" id="code" name="code">
+        </div>
+        <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select class="form-select" id="status" name="status" required>
                 <option value="tersedia">Tersedia</option>

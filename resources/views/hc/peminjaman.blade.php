@@ -47,7 +47,7 @@
                     </div>
                 </form>
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -55,7 +55,7 @@
                                 <th>Jabatan</th>
                                 <th>Lampiran</th>
                                 <th>Tgl Peminjaman</th>
-                                <th>Durasi (hari)</th>
+                                <th>Tgl Pengembalian</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -74,9 +74,18 @@
                                         @endif
                                     </td>
                                     <td>{{ $pinjam->tanggal_peminjaman->toDateString() }}</td>
-                                    <td>{{ $pinjam->durasi }}</td>
+                                                                     <td>
+                                        @if($pinjam->tanggal_pengembalian)
+                                            {{ $pinjam->tanggal_pengembalian->toDateString() }}
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+                                    
                                     <td>
-                                        @if($pinjam->status == 'approved')
+                                        @if($pinjam->accessCard && $pinjam->accessCard->status == 'hilang')
+                                                <span class="badge bg-danger">Hilang</span>
+                                        @elseif($pinjam->status == 'approved')
                                                 <span class="badge bg-success">Approved</span>
                                             @elseif($pinjam->status == 'pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>

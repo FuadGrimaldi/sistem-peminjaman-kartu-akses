@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('access_cards', function (Blueprint $table) {
             $table->id();
             $table->string('card_number')->unique();
+            $table->string('code')->nullable()->unique();
             $table->enum('status', ['tersedia', 'dipinjam', 'hilang']);
             $table->timestamps();
         });

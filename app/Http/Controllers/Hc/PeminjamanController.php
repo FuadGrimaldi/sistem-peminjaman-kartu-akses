@@ -14,7 +14,7 @@ class PeminjamanController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Peminjaman::query();
+        $query = Peminjaman::with('AccessCard');
 
         if ($request->filled('search')) {
             $query->where('nama_peminjam', 'like', '%' . $request->search . '%');

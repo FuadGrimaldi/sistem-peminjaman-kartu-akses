@@ -132,6 +132,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Code Access Card</label>
+                                <div class="info-value">
+                                    @if($peminjaman->accessCard)
+                                        <span class="badge bg-info fs-6 px-3 py-2">
+                                            <i class="bi bi-credit-card-2-front me-1"></i>
+                                            {{ $peminjaman->accessCard->code }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

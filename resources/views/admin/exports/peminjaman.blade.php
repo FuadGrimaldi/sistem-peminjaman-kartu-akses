@@ -15,6 +15,7 @@
             <th>Requested By</th>
             <th>Approved By</th>
             <th>Access Card ID</th>
+            <th>Code Access Card</th>
             <th>Catatan Admin</th>
             <th>Dibuat Pada</th>
             <th>Diperbarui Pada</th>
@@ -37,6 +38,7 @@
             <td>{{ $item->requestedBy->name ?? '-' }}</td>
             <td>{{ $item->approvedBy->name ?? '-' }}</td>
             <td>{{ $item->accessCard->card_number ?? '-' }}</td>
+            <td>{{ $item->accessCard->code ?? '-' }}</td>
             <td>{{ $item->catatan_admin }}</td>
             <td>{{ $item->created_at }}</td>
             <td>{{ $item->updated_at }}</td>

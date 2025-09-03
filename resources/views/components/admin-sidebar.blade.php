@@ -40,13 +40,6 @@
                             Pengguna
                         </a>
                     </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" style="color: white;" onclick="setActive(this)">
-                            <i class="bi bi-bar-chart"></i>
-                            Laporan
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" style="color: white;" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();

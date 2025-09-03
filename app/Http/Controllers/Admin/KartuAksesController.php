@@ -27,6 +27,7 @@ class KartuAksesController extends Controller
         // Validate the request data
         $request->validate([
             'card_number' => 'required|unique:access_cards,card_number',
+            'code' => 'nullable|unique:access_cards,code',
             'status' => 'required|in:tersedia,dipinjam,hilang',
         ]);
 
@@ -44,6 +45,7 @@ class KartuAksesController extends Controller
         // Validate the request data
         $request->validate([
             'card_number' => 'required|unique:access_cards,card_number,' . $id,
+            'code' => 'nullable|unique:access_cards,code,' . $id,
             'status' => 'required|in:tersedia,dipinjam,hilang',
         ]);
         // Find the access card by ID and update it

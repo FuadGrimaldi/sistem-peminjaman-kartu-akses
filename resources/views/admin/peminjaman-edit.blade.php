@@ -102,14 +102,14 @@
     <select class="form-select" id="access_card_id" name="access_card_id" required>
         <option value="">-- Pilih Kartu Akses --</option>
         {{-- Kartu yang sedang dipakai tampil dulu --}}
-        @if($peminjaman->accessCard)
+        @if($peminjaman->accessCard && $peminjaman->accessCard->status != 'hilang')
             <option value="{{ $peminjaman->accessCard->id }}" selected>
                 {{ $peminjaman->accessCard->card_number }} (Sedang Dipakai)
             </option>
         @endif
         {{-- Daftar kartu lain yang tersedia --}}
         @foreach($accessCards as $card)
-            @if(!$peminjaman->accessCard || $card->id != $peminjaman->accessCard->id)
+            @if(($card->status != 'hilang') && (!$peminjaman->accessCard || $card->id != $peminjaman->accessCard->id))
                 <option value="{{ $card->id }}">
                     {{ $card->card_number }}
                 </option>

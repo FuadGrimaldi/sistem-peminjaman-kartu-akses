@@ -12,6 +12,10 @@
         <input type="text" class="form-control" id="card_number" name="card_number" value="{{ old('card_number', $kartuAkses->card_number) }}" required>
     </div>
     <div class="mb-3">
+        <label for="code" class="form-label">Code Kartu</label>
+        <input type="text" class="form-control" id="code" name="code" value="{{ old('code', $kartuAkses->code) }}">
+    </div>
+    <div class="mb-3">
         <label for="status" class="form-label">Status</label>
         <select class="form-control" id="status" name="status" required>
             <option value="tersedia" {{ old('status', $kartuAkses->status) == 'tersedia' ? 'selected' : '' }}>Tersedia</option>

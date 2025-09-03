@@ -11,6 +11,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
+    
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
         <style>
@@ -212,7 +213,9 @@
             @include('components.footer')
         </main>
     </div>
-     <script>
+    
+
+    <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
@@ -269,5 +272,6 @@
         });
         
     </script>
+    @stack('scripts')
 </body>
 </html>

@@ -77,10 +77,12 @@
                             <tbody>
                                 @forelse($latestPeminjaman as $item)
                                     <tr>
-                                        <td>{{ $item->nama_peminjam }}</td>
+                                        <td><a href="{{route('hc.peminjaman.show', $item->id)}}">{{ $item->nama_peminjam }}</a></td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal_peminjaman)->format('d M Y') }}</td>
                                         <td>
-                                            @if($item->status == 'approved')
+                                            @if($item->accessCard && $item->accessCard->status == 'hilang')
+                                                <span class="badge bg-danger">Hilang</span>
+                                            @elseif($item->status == 'approved')
                                                 <span class="badge bg-success">Approved</span>
                                             @elseif($item->status == 'pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>

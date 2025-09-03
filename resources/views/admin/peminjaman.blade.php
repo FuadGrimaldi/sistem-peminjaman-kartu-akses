@@ -48,15 +48,16 @@
                 </form>
 
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No</th>
                                 <th>Nama Peminjam</th>
-                                <th>Jabatan</th>
+                                <th>Mitra</th>
                                 <th>Lampiran</th>
+                                <th>Kartu Akses</th>
                                 <th>Tgl Peminjaman</th>
-                                <th>Durasi (hari)</th>
+                                <th>Tgl Pengembalian</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -66,7 +67,7 @@
                                 <tr>
                                     <td>{{ $peminjaman->firstItem() + $loop->index }}</td>
                                     <td>{{ $pinjam->nama_peminjam }}</td>
-                                    <td>{{ $pinjam->jabatan }}</td>
+                                    <td>{{ $pinjam->mitra }}</td>
                                     <td>
                                         @if($pinjam->lampiran)
                                             <a href="{{ asset('storage/' . $pinjam->lampiran) }}" target="_blank">Lihat Lampiran</a>
@@ -74,10 +75,25 @@
                                             <span>-</span>
                                         @endif
                                     </td>
-                                    <td>{{ $pinjam->tanggal_peminjaman->toDateString() }}</td>
-                                    <td>{{ $pinjam->durasi }}</td>
                                     <td>
-                                        @if($pinjam->status == 'approved')
+                                        @if($pinjam->accessCard)
+                                            {{ $pinjam->accessCard->card_number ?? 'Kartu dihapus' }}
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $pinjam->tanggal_peminjaman->toDateString() }}</td>
+                                    <td>
+                                        @if($pinjam->tanggal_pengembalian)
+                                            {{ $pinjam->tanggal_pengembalian->toDateString() }}
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($pinjam->accessCard && $pinjam->accessCard->status == 'hilang')
+                                                <span class="badge bg-danger">Hilang</span>
+                                        @elseif($pinjam->status == 'approved')
                                                 <span class="badge bg-success">Approved</span>
                                             @elseif($pinjam->status == 'pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>
