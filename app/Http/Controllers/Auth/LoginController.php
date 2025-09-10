@@ -38,6 +38,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
 
     /**
      * Create a new controller instance.
@@ -71,5 +75,15 @@ class LoginController extends Controller
                 ->with('error','Email-Address And Password Are Wrong.');
         }
           
+    }
+
+    public function logout(Request $request)
+    {
+        auth()->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }

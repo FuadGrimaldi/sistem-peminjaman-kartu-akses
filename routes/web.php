@@ -9,11 +9,23 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Hc\PeminjamanController as HcPeminjamanController;
 use App\Http\Controllers\Sekretaris\PeminjamanController as SekrePeminjamanController;
 use App\Http\Controllers\Sekretaris\KartuAksesController as SekreKartuAksesController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+
+// Login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+// Register
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
+// Logout
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 /*------------------------------------------
 --------------------------------------------
